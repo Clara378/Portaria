@@ -4,4 +4,11 @@ const router = express.Router();
 
 
 router.get("/",portariaController.mostrarTabela);
+//mostrar listagem de pessoas + ap visitado, lista de 
+ //registro de entrada/saida,historico de acesso
+
+
+router.post("/cadastrar",portariaController.inserirPessoa);
+//cadastrar de pessoa,cadastrar entrada/saida
+
 module.exports = router;

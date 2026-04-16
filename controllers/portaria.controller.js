@@ -1,12 +1,16 @@
 const portariaModel = require("../models/portaria.model");
 
 const mostrarTabela = (req, res) => {
-  res.send("lista");
+  //res.send("lista");
+
+  portariaModel.readAllPortaria
 }
 
+const inserirPessoa =(req,res) =>{
 
-
+}
 
 module.exports = {
 mostrarTabela,
+inserirPessoa,
 };
