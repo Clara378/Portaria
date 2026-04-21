@@ -5,14 +5,15 @@ class mostrarTabela {
 
   static async readAllPortaria() {
     console.log("portaria.model.js", "readAllPortaria()");
-    const query = "select * from ";
+    const query = "select * from lista_ ";
    
     return db.executarQuery(query);
   }
 
   static async cadastraPessoa(pessoa , hora) {
 
-   const query ="INSERT lista_pessoas SET id = ?, nome = ? WHERE cpf = ?";
+const query = "INSERT INTO lista_pessoas (id, nome, cpf) VALUES (?, ?, ?)";
+query = "update tarefas set dat = ?, hora = ?, descricao = ? where id =?" 
 
     return db.executarQuery(query, [
         pessoa.nome, 
@@ -21,4 +22,4 @@ class mostrarTabela {
     ]);
 }
 }
-module.exports = cadastraPessoa;
+module.exports = mostrarTabela;
