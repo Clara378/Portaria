@@ -1,26 +1,31 @@
 const portariaModel = require("../models/portaria.model");
 
 const mostrarTabela = (req, res) => {
- portariaModel.readAllTarefas().then((cadastrar) => {
-    console.log(cadastrar);
-    res.render("index", { title: "pessoas", dados: nomes });
+ portariaModel.readAllPortaria().then((listaPessoas) => {
+    console.log(listaPessoas);
+    res.render("index", { dados: listaPessoas });
   });
 };
 
 
-
-
-
 const inserirPessoa =(req,res) =>{
   console.log("conteudo", req.body);
- portariaModel.cadastrarTarefa(req.body).then((status) => {
+ portariaModel.cadastrarPessoas(req.body).then((status) => {
     console.log(status.affectedRows);
-    // res.end("vamos ver no que da ");
     return res.redirect("/");
+  });
+};
+
+const editarPeassoa = (req,res) =>{
+  console.log("dados para serem atualizados",req.body);
+  portariaModel.editarPessoas(req.body).then((status) =>{
+    console.log("dados atualizados",status.affectedRows);
+    res.sendStatus(200);
   });
 };
 
 module.exports = {
 mostrarTabela,
 inserirPessoa,
+editarPeassoa,
 };

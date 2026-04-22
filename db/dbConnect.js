@@ -1,6 +1,18 @@
-require("dotenv").config();
-//require("dotenv").config({ path: "../.env" });
+require("dotenv").config(); // Tenta ler na raiz
+// Se o arquivo estiver uma pasta acima, o dotenv.config() automático pode falhar.
+// Por precaução, vamos garantir a leitura:
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 const mariadb = require("mariadb");
+
+// LOG DE TESTE (Coloque fora da função para ver no terminal assim que o app ligar)
+console.log("--- Verificação de Dados do Banco ---");
+console.log("Host:", process.env.DBHOST);
+console.log("User:", process.env.DBUSER);
+console.log("Database:", process.env.DBNAME);
+console.log("Senha existe?:", process.env.DBPASS ? "Sim" : "Não/Vazia");
+console.log("-------------------------------------");
 
 const pool = mariadb.createPool({
   host: process.env.DBHOST,
@@ -11,22 +23,13 @@ const pool = mariadb.createPool({
 });
 
 async function executarQuery(query, params = []) {
-  console.log(
-    "=====================================================================",
-  );
-  console.log("dbConnect.js", "executarQuery()");
-  console.log(arguments);
-
   let conn;
   try {
     conn = await pool.getConnection();
     const rows = await conn.query(query, params);
-    console.log(
-      "=====================================================================",
-    );
     return rows;
   } catch (err) {
-    console.error("Erro ao executar query:", err);
+    console.error("Erro Crítico no Banco:", err.message);
     throw err;
   } finally {
     if (conn) conn.release();

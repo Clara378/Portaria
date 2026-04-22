@@ -11,4 +11,5 @@ router.get("/",portariaController.mostrarTabela);
 router.post("/cadastrar",portariaController.inserirPessoa);
 //cadastrar de pessoa,cadastrar entrada/saida
 
+router.post("/editar",portariaController.editarPeassoa);
 module.exports = router;

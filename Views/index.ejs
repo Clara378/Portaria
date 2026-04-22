@@ -3,73 +3,75 @@
 <%- include('./partials/head') %>
 
   <body>
-    <header class="bg-primary superior d-flex flex-row p-3">
+    <header class="bg-primary text-white d-flex flex-row p-3 shadow">
       <div class="flex-grow-1">
         <h1 class="fs-3">
-          <i class="bi bi-shield-check"></i> Controle de Portaria
+          <i class="bi bi-shield-lock-fill"></i> Sistema de Portaria - Cadastro de Acessos
         </h1>
       </div>
       <div class="flex-grow-1 d-flex flex-row-reverse">
-        <button type="button" class="btn btn-primary">
-          <h1 class="fs-3 px-3"><i class="bi bi-person-circle"></i> login</h1>
+        <button type="button" class="btn btn-outline-light">
+          <i class="bi bi-person-circle"></i> Painel Administrativo
         </button>
       </div>
     </header>
 
     <main class="container d-flex flex-column">
       <div class="d-flex gap-3 my-3">
-        <button type="button" class="btn btn-primary" onclick="abrirModalCadastro()">
-          <i class="bi bi-plus"></i> Cadastrar Pessoa
+        <button type="button" class="btn btn-success" onclick="abrirModalCadastro()">
+          <i class="bi bi-person-plus-fill"></i> Registrar Novo Visitante/Morador
         </button>
       </div>
 
-      <table class="container table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nome</th>
-            <th scope="col">CPF</th>
-            <th scope="col">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% dados.forEach((pessoa, indice)=> { %>
+      <div class="table-responsive shadow-sm">
+        <table class="table table-hover align-middle">
+          <thead class="table-dark">
             <tr>
-              <th scope="row"><%= indice + 1 %></th>
-              <td><%= pessoa.nome %></td>
-              <td><%= pessoa.cpf %></td>
-              <td>
-                <button type="button" class="btn btn-sm btn-warning"
-                  onclick="editarPessoa('<%= pessoa.id %>', '<%= pessoa.nome %>', '<%= pessoa.cpf %>')">
-                  <i class="bi bi-pencil"></i> Editar
-                </button>
-              </td>
+              <th scope="col">#</th>
+              <th scope="col">Nome Completo</th>
+              <th scope="col">Documento (CPF)</th>
+              <th scope="col" class="text-center">Ações</th>
             </tr>
-          <% }); %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% dados.forEach((pessoa, indice)=> { %>
+              <tr>
+                <th scope="row"><%= indice + 1 %></th>
+                <td><%= pessoa.nome %></td>
+                <td><%= pessoa.cpf %></td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-warning"
+                    onclick="editarPessoa('<%= pessoa.id %>', '<%= pessoa.nome %>', '<%= pessoa.cpf %>')">
+                    <i class="bi bi-pencil-square"></i> Atualizar
+                  </button>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
     </main>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true" data-tipoacao="cadastrar">
+    <div class="modal fade" id="modalPortaria" tabindex="-1" aria-hidden="true" data-tipoacao="cadastrar">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalTitulo">Cadastrar Pessoa</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-primary text-white">
+            <h1 class="modal-title fs-5" id="modalTitulo">Registrar Entrada</h1>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label for="nomePessoa" class="form-label">Nome Completo</label>
-              <input type="text" class="form-control" id="nomePessoa" />
+              <label for="nomePessoa" class="form-label font-weight-bold">Nome do Visitante/Morador</label>
+              <input type="text" class="form-control" id="nomePessoa" placeholder="Ex: João Silva" />
             </div>
             <div class="mb-3">
-              <label for="cpfPessoa" class="form-label">CPF</label>
-              <input type="text" class="form-control" id="cpfPessoa" />
+              <label for="cpfPessoa" class="form-label font-weight-bold">CPF</label>
+              <input type="text" class="form-control" id="cpfPessoa" placeholder="000.000.000-00" />
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button id="btn-salvar" type="button" class="btn btn-primary">Salvar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button id="btn-salvar" type="button" class="btn btn-primary">Confirmar Registro</button>
           </div>
         </div>
       </div>
@@ -78,57 +80,64 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-      const modalElement = document.getElementById("exampleModal");
+      // Seleciona o elemento do modal e inicializa o objeto do Bootstrap
+      const modalElement = document.getElementById("modalPortaria");
       const modal = new bootstrap.Modal(modalElement);
       const btnSalvar = document.getElementById("btn-salvar");
 
-      // Função para abrir o modal limpo (Cadastro)
+      // Função: Prepara o formulário para um NOVO cadastro
       function abrirModalCadastro() {
-        document.getElementById("modalTitulo").innerText = "Cadastrar Pessoa";
-        document.getElementById("nomePessoa").value = "";
-        document.getElementById("cpfPessoa").value = "";
-        modalElement.dataset.tipoacao = "cadastrar";
-        modal.show();
+        document.getElementById("modalTitulo").innerText = "Registrar Nova Entrada";
+        document.getElementById("nomePessoa").value = ""; // Limpa campo nome
+        document.getElementById("cpfPessoa").value = "";  // Limpa campo CPF
+        modalElement.dataset.tipoacao = "cadastrar";      // Define o modo como cadastro
+        modal.show(); // Abre o modal
       }
 
-      // Função para abrir o modal preenchido (Edição)
+      // Função: Prepara o formulário com dados existentes para EDIÇÃO
       function editarPessoa(id, nome, cpf) {
-        document.getElementById("modalTitulo").innerText = "Editar Pessoa";
-        document.getElementById("nomePessoa").value = nome;
-        document.getElementById("cpfPessoa").value = cpf;
-        modalElement.dataset.tipoacao = "editar";
-        modalElement.dataset.idPessoa = id; // Guarda o ID para o Update
-        modal.show();
+        document.getElementById("modalTitulo").innerText = "Atualizar Cadastro";
+        document.getElementById("nomePessoa").value = nome; // Preenche nome
+        document.getElementById("cpfPessoa").value = cpf;   // Preenche CPF
+        modalElement.dataset.tipoacao = "editar";           // Define o modo como edição
+        modalElement.dataset.idPessoa = id;                 // Armazena o ID no HTML para usar depois
+        modal.show(); // Abre o modal
       }
 
+      // Evento de clique no botão "Confirmar Registro" (Salvar)
       btnSalvar.addEventListener("click", () => {
-        const acao = modalElement.dataset.tipoacao;
+        const acao = modalElement.dataset.tipoacao; // Verifica se é cadastrar ou editar
         
-        // Dados formatados para o seu Controller (req.body)
-        const dados = {
+        // Cria o objeto de dados combinando os campos do formulário
+        // Esses nomes (nomePessoa, cpfPessoa) devem ser os mesmos que seu Controller espera no req.body
+        const dadosPessoa = {
           nomePessoa: document.getElementById("nomePessoa").value,
           cpfPessoa: document.getElementById("cpfPessoa").value
         };
 
-        // Se for editar, precisamos enviar o ID
+        // Se a ação for editar, inclui o ID no objeto para o Model saber quem atualizar no WHERE
         if (acao === 'editar') {
-          dados.id = modalElement.dataset.idPessoa;
+          dadosPessoa.id = modalElement.dataset.idPessoa;
         }
 
-        const url = acao === 'cadastrar' ? '/cadastrar' : '/editar';
+        // Define a URL baseada na ação (rotas configuradas no seu router.js)
+        const rotaFinal = acao === 'cadastrar' ? '/cadastrar' : '/editar';
 
-        fetch(url, {
-          method: 'POST', // Use POST ou PATCH conforme sua rota
-          body: JSON.stringify(dados),
-          headers: { 'Content-type': 'application/json' },
+        // Faz a chamada para o servidor (Back-end)
+        fetch(rotaFinal, {
+          method: 'POST', // Geralmente POST para cadastrar e POST ou PATCH para editar
+          body: JSON.stringify(dadosPessoa), // Converte o objeto JS para JSON
+          headers: { 'Content-type': 'application/json' }, // Avisa o servidor que está enviando JSON
         })
         .then(res => {
           if (res.ok) {
-            modal.hide();
-            location.reload(); // Recarrega a tabela
+            modal.hide();      // Fecha o modal se deu certo
+            location.reload(); // Recarrega a página para mostrar os novos dados na tabela
+          } else {
+            alert("Erro ao processar o registro na Portaria.");
           }
         })
-        .catch(err => console.error("Erro ao salvar:", err));
+        .catch(err => console.error("Erro na comunicação com o servidor:", err));
       });
     </script>
   </body>
