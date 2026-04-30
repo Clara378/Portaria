@@ -1,31 +1,37 @@
 const portariaModel = require("../models/portaria.model");
 
-const mostrarTabela = (req, res) => {
- portariaModel.readAllPortaria().then((listaPessoas) => {
-    console.log(listaPessoas);
-    res.render("index", { dados: listaPessoas });
-  });
+const portariaController = {
+
+  mostrarTabela: async (req, res) => {
+    try {
+      const pessoas = await portariaModel.listarTodos();
+    res.render("index", { title: "Sistema de Portaria", pessoas });
+    } catch (error) {
+      console.error("Erro ao mostrar tabela:", error);
+      res.status(500).send("Erro interno do servidor.");
+    }
+  },
+
+  inserirPessoa: async (req, res) => {
+    try {
+      await portariaModel.salvar(req.body);
+      res.redirect("/");
+    } catch (error) {
+      console.error("Erro ao inserir pessoa:", error);
+      res.status(500).send("Erro ao cadastrar pessoa.");
+    }
+  },
+
+  editarPeassoa: async (req, res) => {
+    try {
+      await portariaModel.atualizar(req.body);
+      res.redirect("/");
+    } catch (error) {
+      console.error("Erro ao editar pessoa:", error);
+      res.status(500).send("Erro ao editar pessoa.");
+    }
+  },
+
 };
 
-
-const inserirPessoa =(req,res) =>{
-  console.log("conteudo", req.body);
- portariaModel.cadastrarPessoas(req.body).then((status) => {
-    console.log(status.affectedRows);
-    return res.redirect("/");
-  });
-};
-
-const editarPeassoa = (req,res) =>{
-  console.log("dados para serem atualizados",req.body);
-  portariaModel.editarPessoas(req.body).then((status) =>{
-    console.log("dados atualizados",status.affectedRows);
-    res.sendStatus(200);
-  });
-};
-
-module.exports = {
-mostrarTabela,
-inserirPessoa,
-editarPeassoa,
-};
+module.exports = portariaController;

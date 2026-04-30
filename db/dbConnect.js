@@ -1,12 +1,8 @@
-require("dotenv").config(); // Tenta ler na raiz
-// Se o arquivo estiver uma pasta acima, o dotenv.config() automático pode falhar.
-// Por precaução, vamos garantir a leitura:
-const path = require('path');
+require("dotenv").config(); 
+const path = require('path'); 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const mariadb = require("mariadb");
-
-// LOG DE TESTE (Coloque fora da função para ver no terminal assim que o app ligar)
 console.log("--- Verificação de Dados do Banco ---");
 console.log("Host:", process.env.DBHOST);
 console.log("User:", process.env.DBUSER);
